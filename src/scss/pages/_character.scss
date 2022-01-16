@@ -1,0 +1,26 @@
+.character {
+    margin-top: 5rem;
+    display: flex;
+
+    .img {
+        width: 30rem;
+        height: 30rem;
+        display: block;
+        overflow: hidden;
+
+        img {
+            height: 100%;
+        }
+    }
+
+    .content {
+        width: 60rem;
+        margin-left: 4rem;
+
+        p {
+            margin-top: 3rem;
+            font-size: 1.7rem;
+            line-height: 1.4;
+        }
+    }
+}

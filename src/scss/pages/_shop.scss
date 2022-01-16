@@ -1,0 +1,43 @@
+.shop {
+    &-items {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 125rem;
+        margin-left: -7.4rem;
+
+        &__item {
+            width: 25rem;
+            margin: 5rem 2rem;
+            padding: 1rem;
+
+            .img {
+                position: relative;
+                overflow: hidden;
+                height: 35rem;
+
+                img {
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+
+            .title {
+                margin: 1rem 0;
+            }
+
+            .price {
+                font-weight: bold;
+                color: $gray;
+                font-size: 1.6rem;
+            }
+
+            &:hover {
+                transform: translateY(-2rem);
+                box-shadow: 0 .5rem 1rem rgba($black, .5);
+            }
+        }
+    }
+}

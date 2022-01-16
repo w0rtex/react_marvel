@@ -1,0 +1,57 @@
+a {
+
+    &:hover {
+        color: $red;
+    }
+
+    &.active {
+        color: $red;
+    }
+}
+
+.btn-group {
+    display: flex;
+}
+
+.btn {
+    clip-path: polygon(0 17%, 17% 0, 100% 0, 100% 85%, 84% 100%, 0 100%);
+    background-color: $gray;
+    min-width: 10rem;
+    min-height: 3.8rem;
+    width: max-content;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font;
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: $white;
+    margin-right: 2rem;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    transition: all $trans;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $red;
+        color: $white;
+        transform: scale(1.1);
+    }
+}
+
+.btn-red {
+    background-color: $red;
+
+    &:hover {
+        background-color: $gray;
+    }
+}
+
+.btn-long {
+    width: 22rem;
+}
+
+.load-more {
+    margin: auto;
+}

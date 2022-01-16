@@ -1,0 +1,43 @@
+.white {
+    color: #fff;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.section {
+    box-shadow: 0 .3rem 1.5rem rgba($black, .5);
+    padding: 2.5rem;
+    background-color: $white;
+    margin-bottom: 4rem;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.success {
+    color: $success;
+}
+
+.error {
+    color: $error;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.pos-r {
+    position: relative !important;
+}
+
+.m-4 {
+    margin: 4rem;
+}
