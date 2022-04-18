@@ -1,81 +1,53 @@
-import {Component, Fragment} from "react";
+import {Component, Fragment, useEffect, useState} from "react";
 import MarvelService from "../../services/MarvelService";
 import Error from "../error/error";
 import Spinner from "../spinner/spinner";
 import PropTypes from "prop-types"
 
-class Sidebar extends Component {
-    constructor(props) {
-        super(props);
+const Sidebar = (props) => {
 
-        this.state = {
-            char: null,
-            loading: false,
-            error: false
-        }
-    }
+    const [char, setChar] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
 
-    marvelService = new MarvelService()
+    const marvelService = new MarvelService()
 
-    updateChar = () => {
-        const {charId} = this.props
+    const updateChar = () => {
+        const {charId} = props
 
         if (!charId) return false
 
-        this.setState({
-            loading: true
-        })
+        setLoading(true)
 
-        this.marvelService
+        marvelService
             .getCharacter(charId)
             .then(res => {
-                this.setState({
-                    char: res,
-                    loading: false
-                })
+                setChar(res)
+                setLoading(false)
             })
             .catch(res => {
-                this.setState({
-                    error: true,
-                    loading: false
-                })
+                setError(true)
+                setLoading(false)
             })
     }
 
-    componentDidMount() {
-        this.updateChar()
-    }
+    useEffect(updateChar, [props.charId])
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.charId !== this.props.charId) {
-            this.updateChar()
+    const Content = () => {
+        if (char && !loading && !error) {
+            return <View char={char}/>
+        } else if (loading) {
+            return <Spinner/>
+        } else if (error) {
+            return <Error/>
+        } else {
+            return (
+                <h3 className={"mb-4"}>Select the character</h3>
+            )
         }
     }
 
-    render() {
-
-        const {char, loading, error} = this.state
-
-        const Content = () => {
-            if (char && !loading && !error) {
-                return <View char={char}/>
-            } else if (loading) {
-                return <Spinner/>
-            } else if (error) {
-                return <Error/>
-            } else {
-                return (
-                    <h3>Select the character</h3>
-                )
-            }
-        }
-
-        return (
-            <aside>
-                <Content/>
-            </aside>
-        )
-    }
+    return <Content/>
 }
 
 const View = ({char}) => {
@@ -126,21 +98,8 @@ const View = ({char}) => {
                 </p>
                 <Comics/>
             </div>
-            <div className="search section">
-                <h4>Or find a character by name:</h4>
-                <div className="flex">
-                    <input type="text" placeholder="Enter name"/>
-                    <a href="#" className="btn btn-red m-0">Search</a>
-                </div>
-                <h4 id="form-validation" className='error'>This field is required</h4>
-                <h4 id="form-validation" className='success'>Error</h4>
-            </div>
         </Fragment>
     )
-}
-
-Sidebar.propTypes = {
-    charId: PropTypes.number
 }
 
 export default Sidebar

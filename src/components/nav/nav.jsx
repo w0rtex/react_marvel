@@ -1,18 +1,22 @@
 import {Component} from "react";
+import {Link, NavLink} from 'react-router-dom'
 
-export default class Nav extends Component {
-    render () {
-        return (
-            <nav>
-                <div className="title">
-                    <span>Marvel</span> information portal
-                </div>
-                <div className="nav">
-                    <a href="#" className="active">Characters</a>
-                    /
-                    <a href="#">Comics</a>
-                </div>
-            </nav>
-        )
+const Nav = (props) => {
+    const activeState = ({isActive}) => {
+        return isActive ? 'active' : null
     }
+
+    return (
+        <nav>
+            <div className="title">
+                <Link to={'/'}>Marvel</Link> information portal
+            </div>
+            <div className="nav">
+                <NavLink end className={activeState} to="/">Characters</NavLink>
+                <NavLink className={activeState} to="/shop">Comics</NavLink>
+            </div>
+        </nav>
+    )
 }
+
+export default Nav

@@ -1,59 +1,79 @@
-import {Component} from "react";
-
 import img_uw from "../../img/UW.png";
+import MarvelService from "../../services/MarvelService";
+import {Fragment, useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 
-export default class ShopItems extends Component {
-    render () {
-        return (
-            <main className="shop">
-                <div className="shop-items">
-                    <a href="#" className="shop-items__item">
-                        <div className="img">
-                            <img src={img_uw} alt=""/>
-                        </div>
-                        <h4 className="title">Some title here</h4>
-                        <span className="price">$9.99</span>
-                    </a>
-                    <a href="#" className="shop-items__item">
-                        <div className="img">
-                            <img src={img_uw} alt=""/>
-                        </div>
-                        <h4 className="title">Some title here</h4>
-                        <span className="price">$9.99</span>
-                    </a>
-                    <a href="#" className="shop-items__item">
-                        <div className="img">
-                            <img src={img_uw} alt=""/>
-                        </div>
-                        <h4 className="title">Some title here</h4>
-                        <span className="price">$9.99</span>
-                    </a>
-                    <a href="#" className="shop-items__item">
-                        <div className="img">
-                            <img src={img_uw} alt=""/>
-                        </div>
-                        <h4 className="title">Some title here</h4>
-                        <span className="price">$9.99</span>
-                    </a>
-                    <a href="#" className="shop-items__item">
-                        <div className="img">
-                            <img src={img_uw} alt=""/>
-                        </div>
-                        <h4 className="title">Some title here</h4>
-                        <span className="price">$9.99</span>
-                    </a>
-                    <a href="#" className="shop-items__item">
-                        <div className="img">
-                            <img src={img_uw} alt=""/>
-                        </div>
-                        <h4 className="title">Some title here</h4>
-                        <span className="price">$9.99</span>
-                    </a>
+// Components
+import Spinner from "../spinner/spinner";
 
-                </div>
+const ShopItems = (props) => {
 
-                <a href="#" className="btn btn-red load-more btn-long">Load more</a>
-            </main>
-        )
+    const [comics, setComics] = useState(null)
+    const [loading, setLoading] = useState(false)
+
+    const marvelService = new MarvelService()
+
+    const coms = () => {
+        marvelService
+            .getComics()
+            .then(res => {
+                setComics(res)
+            })
+            .catch(err => {
+                throw new Error(err)
+            })
     }
+
+    const updateComs = () => {
+        setLoading(true)
+
+        marvelService
+            .getComics(comics.length)
+            .then(res => {
+                setComics(item => [...item, ...res])
+                setLoading(false)
+            })
+            .catch(err => {
+                throw new Error(err)
+            })
+    }
+
+    useEffect(() => {
+        coms()
+    }, [])
+
+    const Load = () => {
+        if (comics) {
+            return (
+                <Fragment>
+                    <div className="shop-items">
+                        {comics.map(item => {
+                            return (
+                                <Link to={`${item.id}`} key={item.id} className="shop-items__item">
+                                    <div className="img">
+                                        <img src={item.thumbnail} alt=""/>
+                                    </div>
+                                    <h4 className="title">{item.title}</h4>
+                                    <span className="price">${item.price}</span>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                    <div>
+                    {(loading) ? <Spinner/> : <a onClick={updateComs} className="btn btn-red load-more btn-long">Load more</a>}
+                    </div>
+                </Fragment>
+            )
+        } else {
+            return <Spinner style={{top: '10rem'}}/>
+        }
+    }
+
+    return (
+        <main className="shop">
+            <Load/>
+        </main>
+    )
 }
+
+export default ShopItems

@@ -10,7 +10,6 @@ export default class ShopItem extends Component {
     render() {
         return (
             <Fragment>
-                <Nav/>
                 <ComicsHeader/>
                 <ShopItemHero/>
             </Fragment>

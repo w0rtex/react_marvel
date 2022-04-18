@@ -12,4 +12,14 @@ nav {
             color: $red;
         }
     }
+
+    .title {
+        a {
+            color: $red;
+        }
+    }
+
+    .nav > *:not(.nav > *:last-child):after {
+        content: " / ";
+    }
 }

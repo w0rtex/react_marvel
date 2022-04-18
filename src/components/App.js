@@ -1,28 +1,28 @@
 // Default
-import {Component} from "react";
+import { lazy, useState, Suspense } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import Spinner from "./spinner/spinner";
+import Nav from "./nav/nav";
 
 // Pages
-import Home from "./pages/home"
-import Shop from "./pages/shop"
-import ShopItem from "./pages/shop-item"
-import Character from "./pages/character";
+const Home = lazy(() => import("./pages/home"));
+const Shop = lazy(() => import("./pages/shop"));
+const ShopItem = lazy(() => import("./pages/shop-item"));
 
-export default class App extends Component {
-    state = {
-        showRandomChar: true
-    }
+const App = () => {
+    return (
+        <Router>
+            <Nav />
+            <Suspense fallback={<Spinner />}>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="shop" element={<Shop />} />
+                    <Route path="shop/:comicId" element={<ShopItem />} />
+                </Routes>
+            </Suspense>
+        </Router>
+    );
+};
 
-    toggleRandomChar = () => {
-        this.setState((state) => {
-            return {
-                showRandomChar: !state.showRandomChar
-            }
-        })
-    }
-
-    render() {
-        return (
-            <Home/>
-        )
-    }
-}
+export default App;

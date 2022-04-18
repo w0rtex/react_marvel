@@ -7,6 +7,7 @@
 
     .img {
         width: 30%;
+        height: 50rem;
         overflow: hidden;
 
         img {
@@ -32,6 +33,8 @@
     }
 
     .back {
+        font-weight: 600;
+        font-size: 2.3rem;
         width: 10%;
         text-align: right;
     }

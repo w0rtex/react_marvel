@@ -1,103 +1,90 @@
-import {Component, Fragment} from "react";
+import {Component, Fragment, useEffect, useState} from "react";
 import Spinner from "../spinner/spinner";
 
 import MarvelService from '../../services/MarvelService'
 
-export default class Hero extends Component {
-    constructor(props) {
-        super(props);
+const Hero = (props) => {
 
-        this.state = {
-            chars: [],
-            loading: true,
-            active: null,
-            button: true
-        }
-    }
+    const [chars, setChars] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [active, setActive] = useState(null)
+    const [button, setButton] = useState(true)
 
-    marvelService = new MarvelService()
+    const marvelService = new MarvelService()
 
-    updateChars = () => {
-        this.marvelService
+    const updateChars = () => {
+        marvelService
             .getAllCharacters(9, 0)
             .then(chars => {
-                this.setState({
-                    chars,
-                    loading: false,
-                    button: (!(!chars.length || chars.length < 8)) // Disable loadmore button if no more characters to shop
-                })
+                setChars(chars)
+                setLoading(false)
+                setButton((!(!chars.length || chars.length < 8))) // Disable loadmore button if no more characters to shop
             })
     }
 
-    loadChars = () => {
-        this.setState({
-            loading: true
-        })
+    const loadChars = () => {
 
-        this.marvelService
-            .getAllCharacters(9, this.state.chars.length + 1)
+        setLoading(true)
+
+        marvelService
+            .getAllCharacters(9, chars.length + 1)
             .then(newChars => {
-                this.setState(({chars}) => ({
-                    chars: [...chars, ...newChars],
-                    loading: false,
-                    button: (!(!newChars.length || newChars.length < 8)) // Disable loadmore button if no more characters to shop
-                }))
+                setChars(chars => {
+                    return [...chars, ...newChars] // Disable loadmore button if no more characters to shop
+                })
+
+                setLoading(false)
+                setButton((!(!newChars.length || newChars.length < 8)))
             })
     }
 
-    changeChar = (id) => {
-        this.props.chooseChar(id)
+    const changeChar = (id) => {
+        props.chooseChar(id)
 
-        this.setState({
-            active: id
-        })
+        setActive(id)
     }
 
-    componentDidMount() {
-        this.updateChars()
-    }
+    useEffect(updateChars, [])
 
-    render() {
-        const {chars, loading} = this.state
-
-        const Load = () => {
-            if (chars.length) {
-                return chars.map((item, idx) => {
-                    return (
-                        <a tabIndex={idx} key={item.id} onClick={() => this.changeChar(item.id)} className={'character-item ' + ((this.state.active === item.id) ? 'active' : '')}>
-                            <div className="img">
-                                <img src={item.thumbnail} alt="Abyss"/>
-                            </div>
-                            <div className="title">
-                                <h2 className="name">{item.name}</h2>
-                            </div>
-                        </a>
-                    )
-                })
-            } else {
-                return false
-            }
-        }
-
-        const LoadBtn = () => {
-            if (!loading && this.state.button) {
-                return <button onClick={this.loadChars} className="btn btn-red load-more btn-long">Load more</button>
-            } else if (this.state.button) {
+    const Load = () => {
+        if (chars.length) {
+            return chars.map((item, idx) => {
                 return (
-                    <div className="w-100 pos-r m-4"><Spinner/></div>
+                    <div tabIndex={idx} key={item.id} onClick={() => changeChar(item.id)} className={'character-item ' + ((active === item.id) ? 'active' : '')}>
+                        <div className="img">
+                            <img src={item.thumbnail} alt="Abyss"/>
+                        </div>
+                        <div className="title">
+                            <h2 className="name">{item.name}</h2>
+                        </div>
+                    </div>
                 )
-            } else {
-                return (
-                    <h2>There's no characters to show</h2>
-                )
-            }
+            })
+        } else {
+            return false
         }
-
-        return (
-            <div className="hero">
-                <Load/>
-                <LoadBtn/>
-            </div>
-        )
     }
+
+    const LoadBtn = () => {
+        if (!loading && button) {
+            return <button onClick={loadChars} className="btn btn-red load-more btn-long">Load more</button>
+        } else if (button) {
+            return (
+                <div className="w-100 pos-r m-4"><Spinner/></div>
+            )
+        } else {
+            return (
+                <h2>There's no characters to show</h2>
+            )
+        }
+    }
+
+    return (
+        <div className="hero">
+            <Load/>
+            <LoadBtn/>
+        </div>
+    )
 }
+
+export default Hero
